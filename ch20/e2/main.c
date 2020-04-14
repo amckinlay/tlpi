@@ -2,17 +2,25 @@
 #include <stdio.h>
 
 int main(void) {
+  sigset_t set;
   struct sigaction act;
 
+  fprintf(stderr, "blocking SIGUSR1\n");
+  sigemptyset(&set);
+  sigaddset(&set, SIGUSR1);
+  sigprocmask(SIG_BLOCK, &set, NULL);
+
+  fprintf(stderr, "killing process with SIGUSR1\n");
+  kill(0, SIGUSR1);
+
+  fprintf(stderr, "ignoring SIGUSR1\n");
   act.sa_handler = SIG_IGN;
   sigemptyset(&act.sa_mask);
   act.sa_flags = 0;
   sigaction(SIGUSR1, &act, NULL);
 
-  fprintf(stderr,
-          "process failed to ignore signal if shell reports exit code %d\n",
-          128 + SIGUSR1);
-  kill(0, SIGUSR1); // if process does not terminate here it survived signal
+  fprintf(stderr, "unblocking SIGUSR1\n");
+  sigprocmask(SIG_UNBLOCK, &set, NULL);
 
-  fprintf(stderr, "process ignored signal successfully!\n");
+  fprintf(stderr, "process terminating successfully!\n");
 }
