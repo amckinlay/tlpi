@@ -8,9 +8,11 @@ int main(void) {
   sigemptyset(&act.sa_mask);
   act.sa_flags = 0;
   sigaction(SIGUSR1, &act, NULL);
- 
-  fprintf(stderr, "killing self with SIGUSR1 (signal number %d)\n", SIGUSR1);
+
+  fprintf(stderr,
+          "process failed to ignore signal if shell reports exit code %d\n",
+          128 + SIGUSR1);
   kill(0, SIGUSR1); // if process does not terminate here it survived signal
- 
-  fprintf(stderr, "process survived self-kill\n");
+
+  fprintf(stderr, "process ignored signal successfully!\n");
 }
