@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     exit(EXIT_FAILURE);
   }
 
-  pid = atoi(argv[1]);
+  pid = atol(argv[1]);
   signum = atoi(argv[3]);
   for (int n = atoi(argv[2]); n > 0; --n) {
     kill(pid, signum);
