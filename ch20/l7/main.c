@@ -27,13 +27,18 @@ int main(int argc, char **argv) {
   if (argc == 2) {
     sigfillset(&sigset);
     sigprocmask(SIG_SETMASK, &sigset, NULL);
+    // SIGALRM may cause sleep to return early here, and may be discarded
     sleep(atoi(argv[1]));
+
     sigpending(&sigset);
     for (int sig = 1; sig < COUNT_SIZE; sig++)
       if (sigismember(&sigset, sig))
         printf("signal %d is pending\n", sig);
+
     // TODO are pending signals delivered synchronously upon unblock? aka. will
-    // all pending signals be delivered before program termination?
+    // all pending signals here be delivered before gotSigint?
+    // ^ no, only _one_ pending signal is guaranteed to be delivered before
+    // sigprocmask returns. aka. not all pending signals may be counted
     sigemptyset(&sigset);
     sigprocmask(SIG_SETMASK, &sigset, NULL);
   }
