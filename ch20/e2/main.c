@@ -11,7 +11,7 @@ int main(void) {
   sigprocmask(SIG_BLOCK, &set, NULL);
 
   fprintf(stderr, "killing process with SIGUSR1\n");
-  kill(0, SIGUSR1);
+  raise(SIGUSR1);
 
   fprintf(stderr, "ignoring SIGUSR1\n");
   act.sa_handler = SIG_IGN;
