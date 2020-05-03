@@ -1,5 +1,3 @@
-#define _XOPEN_SOURCE 500
-
 #include <signal.h>
 #include <stdio.h>
 #include <stddef.h>
@@ -31,11 +29,10 @@ int main(void) {
   sigemptyset(&set);
   act.sa_handler = basichandler;
   act.sa_mask = set;
-  act.sa_flags = 9;
+  act.sa_flags = SA_RESTART;
   sigaction(SIGINT, &act, NULL);
 
   // TODO possible to modify interrupt setting before handler set?
-  siginterrupt(SIGINT, 0);
   mysiginterrupt(SIGINT, 1);
 
   printf("use SIGINT to interrupt read\n");
@@ -49,7 +46,6 @@ int main(void) {
         return 2;
       }
     } else {
-      buf[size] = '\n';
       printf("possible signal interruption\n");
     }
   };
