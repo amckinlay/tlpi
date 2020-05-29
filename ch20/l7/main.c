@@ -35,10 +35,10 @@ int main(int argc, char **argv) {
       if (sigismember(&sigset, sig))
         printf("signal %d is pending\n", sig);
 
-    // TODO are pending signals delivered synchronously upon unblock? aka. will
-    // all pending signals here be delivered before gotSigint?
-    // ^ no, only _one_ pending signal is guaranteed to be delivered before
-    // sigprocmask returns. aka. not all pending signals may be counted
+    // TODO are pending signals delivered synchronously upon being unblocked?
+    // aka. will all pending signals be delivered before the gotSigint test?
+    // ^no, SUS guarantees the delivery of only _one_ signal before
+    // sigprocmask() returns, so not all pending signals may be counted
     sigemptyset(&sigset);
     sigprocmask(SIG_SETMASK, &sigset, NULL);
   }
